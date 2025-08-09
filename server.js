@@ -56,6 +56,8 @@ mongoose.connect(process.env.MONGODB_URI)
     app.listen(PORT, () => {
       console.log(`Medicard server running on port ${PORT}`);
       console.log(`Visit http://localhost:${PORT} to access the application`);
+      console.log('MongoDB Connected');
+      console.log('Seed drug setup ready');
     });
   })
   .catch((error) => {
