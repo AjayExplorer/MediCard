@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge">
 </p>
 
-<h1 align="center">🔒 Medicard — A Smart & Secure Medical Card System</h1>
+<h1 align="center"> Medicard — A Smart & Secure Medical Card System</h1>
 
 
 
@@ -21,30 +21,30 @@ Ideal for **emergency situations** and **paperless healthcare systems**.
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-### 👤 Patients
-- 🎫 Unique **Medicard ID** for every patient
-- 📜 View **complete medical history**
-- ❤️ Set **organ donation** preferences
-- 💉 Track **blood donations**
-- ✅ Approve or ❌ reject doctor updates
-- 📱 Fully responsive UI
+###  Patients
+-  Unique **Medicard ID** for every patient
+- View **complete medical history**
+-  Set **organ donation** preferences
+- Track **blood donations**
+-  Approve or ❌ reject doctor updates
+- Fully responsive UI
 
-### 🏥 Hospitals / Doctors
-- 📝 Secure **registration & login**
-- 🔍 Search & view patient records
-- ✏️ Request record updates
-- 💊 Add chronic conditions, medications, and treatment notes
+###  Hospitals / Doctors
+-  Secure **registration & login**
+- Search & view patient records
+-  Request record updates
+-  Add chronic conditions, medications, and treatment notes
 
-### 🔐 Privacy & Security
-- 🛡 Role-based authentication
-- 🔏 Encrypted sensitive data
-- ⏳ Full **audit trail** for all updates
+###  Privacy & Security
+-  Role-based authentication
+-  Encrypted sensitive data
+-  Full **audit trail** for all updates
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 | Layer       | Technologies                          |
 |-------------|---------------------------------------|
@@ -54,11 +54,12 @@ Ideal for **emergency situations** and **paperless healthcare systems**.
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
-### 1️⃣ Clone the Repository
+###  Clone the Repository
 ```bash
 git clone https://github.com/AjayExplorer/MediCard.git
 cd medicard
+
 
 
