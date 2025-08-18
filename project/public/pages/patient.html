@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Medicard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <div class="navbar-brand">
+                <i class="fas fa-heartbeat me-2"></i>
+                Medicard
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    <i class="fas fa-user me-1"></i>
+                    <span id="patientName">Loading...</span>
+                </span>
+                <span class="badge bg-light text-primary me-3" id="medicardId">Loading...</span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Alerts -->
+        <div class="alert alert-danger d-none" id="errorAlert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="errorMessage"></span>
+        </div>
+
+        <div class="alert alert-success d-none" id="successAlert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span id="successMessage"></span>
+        </div>
+
+        <!-- Consent Requests Alert -->
+        <div class="alert alert-warning d-none" id="consentAlert">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="fas fa-bell me-2"></i>
+                    You have <span id="consentCount">0</span> pending consent request(s)
+                </span>
+                <button class="btn btn-sm btn-warning" onclick="showConsentRequests()">
+                    View Requests
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-tab="overview">
+                        <i class="fas fa-tachometer-alt me-2"></i>Overview
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="medical-history">
+                        <i class="fas fa-history me-2"></i>Medical History
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="medications">
+                        <i class="fas fa-pills me-2"></i>Current Medications
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="allergies">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Allergies
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="lab-reports">
+                        <i class="fas fa-flask me-2"></i>Lab Reports
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="consent-requests">
+                        <i class="fas fa-clipboard-check me-2"></i>Consent Requests
+                        <span class="badge bg-primary ms-2 d-none" id="consentBadge">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Overview Tab -->
+                <div class="tab-content" id="overview">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-user me-2"></i>User Overview</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="fw-bold">Name:</td>
+                                            <td id="overviewName">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Medicard ID:</td>
+                                            <td id="overviewMedicardId">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Date of Birth:</td>
+                                            <td id="overviewDob">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Gender:</td>
+                                            <td id="overviewGender">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Blood Group:</td>
+                                            <td><span class="badge bg-danger" id="overviewBloodGroup">-</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td class="fw-bold">Contact:</td>
+                                            <td id="overviewContact">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Email:</td>
+                                            <td id="overviewEmail">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Weight:</td>
+                                            <td id="overviewWeight">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Height:</td>
+                                            <td id="overviewHeight">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Organ Donation:</td>
+                                            <td id="overviewOrganDonation">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-procedures fs-2 mb-2"></i>
+                                            <h6>Chronic Conditions</h6>
+                                            <h4 id="conditionsCount">0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-exclamation-triangle fs-2 mb-2"></i>
+                                            <h6>Allergies</h6>
+                                            <h4 id="allergiesCount">0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-pills fs-2 mb-2"></i>
+                                            <h6>Current Medications</h6>
+                                            <h4 id="medicationsCount">0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-flask fs-2 mb-2"></i>
+                                            <h6>Lab Reports</h6>
+                                            <h4 id="labReportsCount">0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <p class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Last updated: <span id="lastUpdated">-</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical History Tab -->
+                <div class="tab-content d-none" id="medical-history">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Chronic Conditions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="conditionsList">
+                                <!-- Conditions will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medications Tab -->
+                <div class="tab-content d-none" id="medications">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-pills me-2"></i>Current Medications</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="medicationsList">
+                                <!-- Medications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Allergies Tab -->
+                <div class="tab-content d-none" id="allergies">
+                    <div class="card">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Known Allergies</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="allergiesList">
+                                <!-- Allergies will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab Reports Tab -->
+                <div class="tab-content d-none" id="lab-reports">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-flask me-2"></i>Lab Reports</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="labReportsList">
+                                <!-- Lab reports will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consent Requests Tab -->
+                <div class="tab-content d-none" id="consent-requests">
+                    <div class="card">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0"><i class="fas fa-clipboard-check me-2"></i>Consent Requests</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="consentRequestsList">
+                                <!-- Consent requests will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consent Request Modal -->
+    <div class="modal fade" id="consentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Review Consent Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="consentModalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="respondToConsent('rejected')">Reject</button>
+                    <button type="button" class="btn btn-success" onclick="respondToConsent('approved')">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/patient.js"></script>
+</body>
+</html>

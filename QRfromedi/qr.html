@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QR Code Generator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    margin: 0;
+    color: #e2e8f0;
+  }
+  .container {
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    background: #1e293b;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    animation: fadeIn 0.3s ease;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #38bdf8;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #94a3b8;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    font-size: 14px;
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 5px #38bdf8;
+  }
+  button {
+    background: #38bdf8;
+    color: #0f172a;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: background 0.2s ease;
+  }
+  button:hover { background: #0ea5e9 }
+  .center { text-align: center }
+  .qr-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    display: inline-block;
+    margin-top: 20px;
+    border: 1px solid #334155;
+    width: 340px;
+    height: 210px;
+    position: relative;
+    overflow: hidden;
+    color: #e2e8f0;
+  }
+  .qr-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.05), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+  .qr-card .chip {
+    width: 40px;
+    height: 28px;
+    background: gold;
+    border-radius: 4px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  .qr-card img {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background: white;
+    padding: 8px;
+  }
+  .qr-card .name {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .qr-card .phone {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    font-size: 14px;
+    color: #94a3b8;
+  }
+  /* Removed card number from visible card */
+  a.download-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #22c55e;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+  }
+  a.download-btn:hover { background: #16a34a }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px) }
+    to { opacity: 1; transform: translateY(0) }
+  }
+</style>
+</head>
+<body>
+<div class="container" id="formPage">
+  <h1>QR Code Generator</h1>
+  <label for="cardNumber">Card Number</label>
+  <input id="cardNumber" type="text" placeholder="1234 5678 9012" />
+  <label for="name">Name</label>
+  <input id="name" type="text" placeholder="John Doe" />
+  <label for="phone">Phone Number</label>
+  <input id="phone" type="text" placeholder="+1 234 567 890" />
+  <label for="size">Size (px)</label>
+  <select id="size">
+    <option value="150">150 × 150</option>
+    <option value="200">200 × 200</option>
+    <option value="300">300 × 300</option>
+    <option value="400">400 × 400</option>
+  </select>
+  <button id="generate">Generate QR Code</button>
+</div>
+
+<div class="container center" id="resultPage" style="display:none;">
+  <h1>Your QR Code Card</h1>
+  <div class="qr-card" id="qrCard">
+    <div class="chip"></div>
+    <div class="name" id="cardName"></div>
+    <div class="phone" id="cardPhone"></div>
+    <img id="qrImage" alt="QR Code" />
+  </div>
+  <br>
+  <a id="downloadLink" class="download-btn" href="#" download="qr_atm_card.png">Download Card</a>
+  <br>
+  <button id="back">Generate Another</button>
+</div>
+
+<script>
+  const formPage = document.getElementById('formPage');
+  const resultPage = document.getElementById('resultPage');
+  const nameInput = document.getElementById('name');
+  const phoneInput = document.getElementById('phone');
+  const cardNumberInput = document.getElementById('cardNumber');
+  const sizeSelect = document.getElementById('size');
+  const qrImage = document.getElementById('qrImage');
+  const cardName = document.getElementById('cardName');
+  const cardPhone = document.getElementById('cardPhone');
+  const downloadLink = document.getElementById('downloadLink');
+  const generateBtn = document.getElementById('generate');
+  const backBtn = document.getElementById('back');
+
+  function buildApiUrl(data, size) {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(data)}`;
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const cardNumber = cardNumberInput.value.trim();
+    if (!name || !phone || !cardNumber) {
+      alert('Please fill all fields');
+      return;
+    }
+    const size = sizeSelect.value;
+    const qrData = `Name: ${name}\nCard Number: ${cardNumber}\nPhone: ${phone}`;
+    const url = buildApiUrl(qrData, size);
+
+    qrImage.src = url;
+    cardName.textContent = name;
+    cardPhone.textContent = phone;
+
+    // Wait until QR image fully loads before generating download link
+    qrImage.onload = () => {
+      import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js').then(() => {
+        html2canvas(document.getElementById('qrCard')).then(canvas => {
+          downloadLink.href = canvas.toDataURL('image/png');
+        });
+      });
+    };
+
+    formPage.style.display = 'none';
+    resultPage.style.display = 'block';
+  });
+
+  backBtn.addEventListener('click', () => {
+    resultPage.style.display = 'none';
+    formPage.style.display = 'block';
+    nameInput.value = '';
+    phoneInput.value = '';
+    cardNumberInput.value = '';
+  });
+</script>
+</body>
+</html>

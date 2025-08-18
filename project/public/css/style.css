@@ -1,0 +1,269 @@
+:root {
+    --primary-color: #2563EB;
+    --success-color: #059669;
+    --warning-color: #D97706;
+    --danger-color: #DC2626;
+    --info-color: #0891B2;
+    --light-color: #F8FAFC;
+    --dark-color: #1F2937;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #EBF4FF 0%, #E0F2FE 50%, #F0FDF4 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #10B981 100%);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn {
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #1D4ED8;
+    border-color: #1D4ED8;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover {
+    background-color: #047857;
+    border-color: #047857;
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #B45309;
+    border-color: #B45309;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.navbar {
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.list-group-item {
+    border: none;
+    border-radius: 8px !important;
+    margin-bottom: 4px;
+    transition: all 0.15s ease-in-out;
+}
+
+.list-group-item.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.list-group-item:hover:not(.active) {
+    background-color: #F1F5F9;
+    transform: translateX(4px);
+}
+
+.alert {
+    border: none;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-danger {
+    border-left-color: var(--danger-color);
+    background-color: #FEF2F2;
+    color: #991B1B;
+}
+
+.alert-success {
+    border-left-color: var(--success-color);
+    background-color: #F0FDF4;
+    color: #166534;
+}
+
+.alert-warning {
+    border-left-color: var(--warning-color);
+    background-color: #FFFBEB;
+    color: #92400E;
+}
+
+.alert-info {
+    border-left-color: var(--info-color);
+    background-color: #F0F9FF;
+    color: #1E40AF;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: var(--dark-color);
+    background-color: #F8FAFC;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+.medical-record-item {
+    background-color: #F8FAFC;
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.severity-mild {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border-left-color: var(--warning-color);
+}
+
+.severity-moderate {
+    background-color: #FED7AA;
+    color: #9A3412;
+    border-left-color: #EA580C;
+}
+
+.severity-severe {
+    background-color: #FECACA;
+    color: #991B1B;
+    border-left-color: var(--danger-color);
+}
+
+.severity-critical {
+    background-color: #FCA5A5;
+    color: #7F1D1D;
+    border-left-color: #B91C1C;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .btn-group .btn {
+        font-size: 0.875rem;
+    }
+}
+
+/* Print styles for medical records */
+@media print {
+    .navbar, .list-group, .btn, .alert {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .col-md-9 {
+        width: 100% !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}
+
+.medication-row {
+    background-color: #F8FAFC;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #E2E8F0;
+}
+
+.consent-request-item {
+    background-color: #FFFBEB;
+    border: 1px solid #F59E0B;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.adr-warning {
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+
+.adr-safe {
+    background-color: #F0FDF4;
+    border-left-color: var(--success-color);
+    color: #166534;
+}
+
+.adr-unsafe {
+    background-color: #FEF2F2;
+    border-left-color: var(--danger-color);
+    color: #991B1B;
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard - Medicard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+        <div class="container">
+            <div class="navbar-brand">
+                <i class="fas fa-hospital me-2"></i>
+                Medicard Hospital
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    <i class="fas fa-hospital-user me-1"></i>
+                    <span id="hospitalName">Loading...</span>
+                </span>
+                <span class="badge bg-light text-success me-3" id="ninNumber">Loading...</span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Alerts -->
+        <div class="alert alert-danger d-none" id="errorAlert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="errorMessage"></span>
+        </div>
+
+        <div class="alert alert-success d-none" id="successAlert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span id="successMessage"></span>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" data-tab="patient-search">
+                        <i class="fas fa-search me-2"></i>Patient Search
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="patient-records">
+                        <i class="fas fa-file-medical me-2"></i>Patient Records
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="adr-check">
+                        <i class="fas fa-shield-alt me-2"></i>ADR Check
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="update-request">
+                        <i class="fas fa-edit me-2"></i>Request Update
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Patient Search Tab -->
+                <div class="tab-content" id="patient-search">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-search me-2"></i>Search Patient by Medicard ID</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="searchForm">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="searchMedicardId" 
+                                           placeholder="Enter Medicard ID (e.g., MED1234567890)" required>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-search me-1"></i>Search Patient
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <div id="searchResults" class="d-none">
+                                <!-- Search results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Records Tab -->
+                <div class="tab-content d-none" id="patient-records">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-file-medical me-2"></i>Patient Medical Records</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="patientRecords">
+                                <p class="text-muted text-center py-4">
+                                    <i class="fas fa-search fa-3x mb-3 d-block"></i>
+                                    Search for a patient to view their medical records
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADR Check Tab -->
+                <div class="tab-content d-none" id="adr-check">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Adverse Drug Reaction (ADR) Check</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="adrForm">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Patient Medicard ID</label>
+                                    <input type="text" class="form-control" id="adrMedicardId" 
+                                           placeholder="Enter patient's Medicard ID" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Medications to Prescribe</label>
+                                    <div id="medicationsContainer">
+                                        <div class="medication-row mb-2">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control medication-name" 
+                                                           placeholder="Medication name" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text" class="form-control medication-dosage" 
+                                                           placeholder="Dosage" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text" class="form-control medication-frequency" 
+                                                           placeholder="Frequency" required>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-outline-danger" 
+                                                            onclick="removeMedication(this)">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-success btn-sm" 
+                                            onclick="addMedication()">
+                                        <i class="fas fa-plus me-1"></i>Add Medication
+                                    </button>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-shield-alt me-1"></i>Check for Drug Interactions
+                                </button>
+                            </form>
+                            
+                            <div id="adrResults" class="mt-4 d-none">
+                                <!-- ADR results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Request Tab -->
+                <div class="tab-content d-none" id="update-request">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Request Patient Record Update</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="updateRequestForm">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">User Medicard ID</label>
+                                    <input type="text" class="form-control" id="updateMedicardId" 
+                                           placeholder="Enter patient's Medicard ID" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Update Type</label>
+                                    <select class="form-control" id="updateType" required>
+                                        <option value="">Select update type</option>
+                                        <option value="addCondition">Add Chronic Condition</option>
+                                        <option value="addMedication">Add Medication</option>
+                                        <option value="addAllergy">Add Allergy</option>
+                                        <option value="addLabReport">Add Lab Report</option>
+                                        <option value="updateInfo">Update General Information</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="updateFields">
+                                    <!-- Dynamic fields based on update type -->
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Request Message (Optional)</label>
+                                    <textarea class="form-control" id="requestMessage" rows="3" 
+                                              placeholder="Add any additional notes for the patient..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-paper-plane me-1"></i>Send Update Request
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/hospital.js"></script>
+</body>
+</html>
